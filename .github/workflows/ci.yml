@@ -25,7 +25,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m venv ${{ github.workspace }}/gaming_leaderboard/venv
-        source ${{ github.workspace }}/gaming_leaderboard/venv/bin/activate
         pip install --upgrade pip
         ls -al $GITHUB_WORKSPACE
         find $GITHUB_WORKSPACE -name "requirements.txt"
@@ -33,7 +32,7 @@ jobs:
       working-directory: gaming_leaderboard
     - name: Apply Migrations (SQLite)
       run: |
-        source venv/bin/activate
+        source ${{ github.workspace }}/gaming_leaderboard/venv/bin/activate
         python manage.py makemigrations
         python manage.py migrate
 
