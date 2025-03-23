@@ -31,12 +31,6 @@
 <div class="section">
     <h2>View Leaderboard</h2>
     <form action="{% url 'leaderboard' %}" method="get">
-        <label for="game_mode">Select Game Mode:</label>
-        <select name="game_mode" id="game_mode" required>
-            {% for mode in game_modes %}
-                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
-            {% endfor %}
-        </select>
         <button type="submit">Go to Leaderboard</button>
     </form>
 </div>
@@ -44,12 +38,6 @@
 <div class="section">
     <h2>Check Your Rank</h2>
     <form action="{% url 'player_rank' %}" method="get">
-        <input type="number" name="user_id" placeholder="User ID" required>
-        <select name="game_mode" required>
-            {% for mode in game_modes %}
-                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
-            {% endfor %}
-        </select>
         <button type="submit">Check Rank</button>
     </form>
 </div>
