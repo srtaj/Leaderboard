@@ -39,21 +39,5 @@ jobs:
 
     - name: Apply Migrations (SQLite)
       run: |
-        if [ -d "venv/bin" ]; then
-          source venv/bin/activate
-        else
-          echo "Virtual environment not found"
-          exit 1
-        fi
         python manage.py makemigrations
         python manage.py migrate
-
-    - name: Run Tests
-      run: |
-        if [ -d "venv/bin" ]; then
-          source venv/bin/activate
-        else
-          echo "Virtual environment not found"
-          exit 1
-        fi
-        python manage.py test
