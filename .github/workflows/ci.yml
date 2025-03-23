@@ -24,13 +24,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m venv venv
-        if [ -d "venv/bin" ]; then
-          source venv/bin/activate
-        else
-          echo "Virtual environment creation failed"
-          exit 1
-        fi
         pip install --upgrade pip
         ls -al $GITHUB_WORKSPACE
         find $GITHUB_WORKSPACE -name "requirements.txt"
