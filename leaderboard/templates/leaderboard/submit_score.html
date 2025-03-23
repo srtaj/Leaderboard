@@ -1,0 +1,89 @@
+{% extends 'leaderboard/base.html' %}
+
+{% block content %}
+<div class="section">
+    <h2>Submit Score</h2>
+
+    <!-- Success Message (without showing data) -->
+    {% if submitted_score %}
+        <div id="success-message" class="alert success">
+            Score submitted successfully!
+        </div>
+    {% endif %}
+
+    <form action="{% url 'submit_score' %}" method="post">
+        {% csrf_token %}
+        <input type="number" name="user_id" placeholder="User ID" required>
+        <input type="number" name="score" placeholder="Score" required>
+
+        <!-- Game Mode Dropdown -->
+        <select name="game_mode" required>
+            {% for mode in game_modes %}
+                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Submit Score</button>
+    </form>
+</div>
+
+<!-- New Section for Navigating to Leaderboard -->
+<div class="section">
+    <h2>View Leaderboard</h2>
+    <form action="{% url 'leaderboard' %}" method="get">
+        <label for="game_mode">Select Game Mode:</label>
+        <select name="game_mode" id="game_mode" required>
+            {% for mode in game_modes %}
+                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Go to Leaderboard</button>
+    </form>
+</div>
+
+<div class="section">
+    <h2>Check Your Rank</h2>
+    <form action="{% url 'player_rank' %}" method="get">
+        <input type="number" name="user_id" placeholder="User ID" required>
+        <select name="game_mode" required>
+            {% for mode in game_modes %}
+                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Check Rank</button>
+    </form>
+</div>
+
+<!-- Success Message Styling + JS to Fade Out -->
+<style>
+    .alert {
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: opacity 1s ease-out;
+    }
+
+    .alert.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
+
+<script>
+    // Fade out the success message after 3 seconds
+    document.addEventListener('DOMContentLoaded', () => {
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.opacity = '0';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 1000); // Extra time to fully disappear after fade-out
+            }, 1000); // Start fading out after 3 seconds
+        }
+    });
+</script>
+{% endblock %}

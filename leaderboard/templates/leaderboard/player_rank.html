@@ -1,0 +1,52 @@
+{% extends 'leaderboard/base.html' %}
+
+{% block content %}
+<div class="section">
+    <h2>Check Your Rank</h2>
+    <form action="{% url 'player_rank' %}" method="get">
+        <input type="number" name="user_id" placeholder="User ID" required>
+        <select name="game_mode" required>
+            {% for mode in game_modes %}
+                <option value="{{ mode.name }}">{{ mode.name|title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Check Rank</button>
+    </form>
+
+    {% if player_rank %}
+        <div class="rank-info">
+            <p><strong>Username:</strong> {{ player_rank.username }}</p>
+            <p><strong>Rank:</strong> {{ player_rank.rank }}</p>
+            <p><strong>Total Score:</strong> {{ player_rank.total_score }}</p>
+            <p><strong>Game Mode:</strong> {{ player_rank.game_mode }}</p>
+        </div>
+    {% elif error %}
+        <p style="text-align: center; color: #777;">{{ error }}</p>
+    {% endif %}
+
+    <!-- ✅ Back Button -->
+    <div style="margin-top: 20px;">
+        <a href="{% url 'submit_score' %}" class="btn-back">← Back</a>
+    </div>
+</div>
+
+<!-- ✅ Back Button Styling -->
+<style>
+    .btn-back {
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
