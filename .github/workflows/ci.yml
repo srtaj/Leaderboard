@@ -25,14 +25,35 @@ jobs:
     - name: Install dependencies
       run: |
         python -m venv venv
-        source venv/bin/activate
+        if [ -d "venv/bin" ]; then
+          source venv/bin/activate
+        else
+          echo "Virtual environment creation failed"
+          exit 1
+        fi
         pip install --upgrade pip
-        pip install -r requirements.txt
+        ls -al $GITHUB_WORKSPACE
+        find $GITHUB_WORKSPACE -name "requirements.txt"
+        pip install -r $GITHUB_WORKSPACE/requirements.txt
       working-directory: gaming_leaderboard
 
     - name: Apply Migrations (SQLite)
       run: |
-        source venv/bin/activate
+        if [ -d "venv/bin" ]; then
+          source venv/bin/activate
+        else
+          echo "Virtual environment not found"
+          exit 1
+        fi
         python manage.py makemigrations
         python manage.py migrate
-      working-directory: gaming_leaderboard
+
+    - name: Run Tests
+      run: |
+        if [ -d "venv/bin" ]; then
+          source venv/bin/activate
+        else
+          echo "Virtual environment not found"
+          exit 1
+        fi
+        python manage.py test
