@@ -16,6 +16,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class SubmitScoreView(TemplateView):
     template_name = 'leaderboard/submit_score.html'
 
@@ -29,14 +30,12 @@ class SubmitScoreView(TemplateView):
 
                 user = get_object_or_404(User, id=user_id)
 
-                # ✅ Add game session entry
                 GameSession.objects.create(
                     user=user,
                     score=score,
                     game_mode=game_mode
                 )
 
-                # ✅ Update leaderboard
                 total_score = GameSession.objects.filter(
                     user=user, game_mode=game_mode
                 ).aggregate(total_score=Sum('score'))['total_score'] or 0
@@ -48,10 +47,6 @@ class SubmitScoreView(TemplateView):
                 )
 
                 self.update_leaderboard_rank(game_mode, leaderboard_entry)
-
-                # ✅ Clear cache
-                cache.delete(f'leaderboard_{game_mode.name}')
-
                 submitted_score = {
                     'user_id': user_id,
                     'score': score,
