@@ -59,15 +59,15 @@
         <!-- ✅ Pagination Controls -->
         <div class="pagination">
             {% if page_obj.has_previous %}
-                <a href="?page=1">First</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page=1{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% for mode in selected_modes %}&game_modes={{ mode }}{% endfor %}">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% for mode in selected_modes %}&game_modes={{ mode }}{% endfor %}">Previous</a>
             {% endif %}
 
             <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                <a href="?page={{ page_obj.next_page_number }}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% for mode in selected_modes %}&game_modes={{ mode }}{% endfor %}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% for mode in selected_modes %}&game_modes={{ mode }}{% endfor %}">Last</a>
             {% endif %}
         </div>
     {% else %}
