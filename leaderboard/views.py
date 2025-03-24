@@ -75,23 +75,16 @@ class SubmitScoreView(TemplateView):
     @staticmethod
     def update_leaderboard_rank(game_mode, updated_entry):
         try:
+            # Get existing leaderboard entries in descending order
             leaderboard_entries = list(
-                Leaderboard.objects.filter(game_mode=game_mode).order_by('-total_score')
+                Leaderboard.objects.filter(game_mode=game_mode).exclude(user=updated_entry.user).order_by(
+                    '-total_score')
             )
 
-            existing_entry = Leaderboard.objects.get(user=updated_entry.user,
-                                                     game_mode=updated_entry.game_mode)
+            leaderboard_entries.append(updated_entry)
+            leaderboard_entries.sort(key=lambda entry: entry.total_score, reverse=True)
 
-            if existing_entry in leaderboard_entries:
-                leaderboard_entries.remove(existing_entry)
-
-            scores = [entry.total_score for entry in leaderboard_entries]
-            new_position = bisect_right(scores, updated_entry.total_score, lo=0, hi=len(scores))
-
-            leaderboard_entries.insert(len(scores) - new_position, updated_entry)
-
-            for index in range(new_position, len(leaderboard_entries)):
-                entry = leaderboard_entries[index]
+            for index, entry in enumerate(leaderboard_entries):
                 entry.rank = index + 1
                 entry.save()
 

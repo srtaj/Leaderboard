@@ -27,7 +27,7 @@ A **Django-based gaming leaderboard system** that tracks player scores across mu
 - We can Implement Web sockets for real time update or run a cron which will be running every 30 seconds to update the Leaderboard
 - UI/UX improvements can be
 - Caching can be added if required(but we need to invalidate it whenever leaderboard rankings get updated)
-
+- Notification service can be added to notify the Rank 1 user.
 ---
 
 ## 📂 **APIs**
@@ -36,14 +36,12 @@ A **Django-based gaming leaderboard system** that tracks player scores across mu
 **URL:**  
 POST /leaderboard/submit_score/
 **Request Body:**
-```json
 {
   "user_id": 1,
   "score": 100,
   "game_mode": "Battle Royale"
 }
 **Response:**
-
 {
   "message": "Score submitted successfully",
   "total_score": 250
@@ -90,7 +88,7 @@ Response:
 **3. Fetch a player's rank based on total score.
 **
 **URL:**  
-GET /api/leaderboard/rank/{user_id}/
+GET leaderboard/rank/{user_id}/
 Response:
 
 json
