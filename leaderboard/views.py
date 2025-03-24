@@ -10,7 +10,7 @@ from django.utils.timezone import make_aware
 from datetime import datetime, time
 from bisect import bisect_right
 from django.views.generic.base import TemplateView
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
@@ -30,23 +30,24 @@ class SubmitScoreView(TemplateView):
 
                 user = get_object_or_404(User, id=user_id)
 
-                GameSession.objects.create(
-                    user=user,
-                    score=score,
-                    game_mode=game_mode
-                )
+                with transaction.atomic():  # ✅ Atomic transaction starts here
+                    GameSession.objects.create(
+                        user=user,
+                        score=score,
+                        game_mode=game_mode
+                    )
 
-                total_score = GameSession.objects.filter(
-                    user=user, game_mode=game_mode
-                ).aggregate(total_score=Sum('score'))['total_score'] or 0
+                    total_score = GameSession.objects.filter(
+                        user=user, game_mode=game_mode
+                    ).aggregate(total_score=Sum('score'))['total_score'] or 0
 
-                leaderboard_entry, created = Leaderboard.objects.update_or_create(
-                    user=user,
-                    game_mode=game_mode,
-                    defaults={'total_score': total_score}
-                )
+                    leaderboard_entry, created = Leaderboard.objects.select_for_update().update_or_create(
+                        user=user,
+                        game_mode=game_mode,
+                        defaults={'total_score': total_score}
+                    )
 
-                self.update_leaderboard_rank(game_mode, leaderboard_entry)
+                    self.update_leaderboard_rank(game_mode, leaderboard_entry)
                 submitted_score = {
                     'user_id': user_id,
                     'score': score,
@@ -65,8 +66,9 @@ class SubmitScoreView(TemplateView):
 
             except Exception as e:
                 logger.error(f"Unexpected error: {e}")
-                return HttpResponseServerError("User not Found")
+                return HttpResponseServerError("An error occurred.")
 
+        # If validation fails, reload the form
         game_modes = GameMode.objects.all()
         return render(request, self.template_name, {'game_modes': game_modes})
 
