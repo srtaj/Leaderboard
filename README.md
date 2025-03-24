@@ -44,18 +44,15 @@ POST /leaderboard/submit_score/
 }
 **Response:**
 
-json
-Copy
-Edit
 {
   "message": "Score submitted successfully",
   "total_score": 250
 }
 
 
-2. Retrieve the top 10 players' scores, filtered and sorted by rank or score.
-
-URL:
+**2. Retrieve the top 10 players' scores, filtered and sorted by rank or score.
+**
+**URL:**  
 GET /leaderboard/top/
 
 Query Parameters:
@@ -90,13 +87,9 @@ Response:
   ]
 }
 
-3. Fetch a player's rank based on total score.
-
-URL:
-
-swift
-Copy
-Edit
+**3. Fetch a player's rank based on total score.
+**
+**URL:**  
 GET /api/leaderboard/rank/{user_id}/
 Response:
 
